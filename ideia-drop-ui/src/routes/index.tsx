@@ -18,7 +18,9 @@ export const Route = createFileRoute('/')({
 function RouteComponent() {
 
   const {data: ideas} = useSuspenseQuery(ideasQueryOptions)
-  const latestIdeas = ideas.slice(0, 3);
+  const latestIdeas = [...ideas]
+  .sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() )
+  .slice(0, 3);
 
   return (
     <div

@@ -28,7 +28,9 @@ export const Route = createFileRoute('/ideas/')({
 })
 
 function IdeasPage() {
-  const {data: ideas} = useSuspenseQuery(ideasQueryOptions())
+  
+  const {data} = useSuspenseQuery(ideasQueryOptions());
+  const ideas = [...data].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() )
   console.log(ideas)
 
   return(
