@@ -1,5 +1,5 @@
 export type Idea = {
-    id: string;
+    _id: string;
     title: string;
     sumary: string;
     description: string;

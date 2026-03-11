@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { fetchIdea } from '#/api/ideas';
 import { deleteIdea } from '#/api/ideas';
 import { useMutation } from '@tanstack/react-query';
-
+import { useAuth } from '#/context/AuthContext';
 
 const ideaQueryOptions = (ideaId:string) => queryOptions({
   queryKey: ['idea', ideaId],
@@ -24,6 +24,7 @@ function IdeaDetailsPage() {
     const {ideaId} = Route.useParams();
     const {data:idea} = useSuspenseQuery(ideaQueryOptions(ideaId))
     const navigate = useNavigate();
+    const {user} = useAuth();
 
     const {mutateAsync: deleteMutate, isPending} = useMutation({
       mutationFn: () => deleteIdea(ideaId),
@@ -54,12 +55,26 @@ function IdeaDetailsPage() {
       {idea.description}
     </p>
 
-    <button
-    onClick={handleDelete}
-    disabled={isPending}
-    className='text-sm bg-red-600 text-white mt-4 px-4 py-2
-    rounded transition hover:bg-red-700 disabled:opacity:50'>
-      {isPending ? 'Deleting...' : 'Delete'}
-    </button>
+    
+    {user && user.id === idea.user && (
+      <>
+        {/*Edit link*/}
+            <Link to='/ideas/$ideaId/edit' params={{ideaId}}
+            className='inline-block text-sm bg-yellow-500 hover:bg-yellow-600
+            text-white mt-4 mr-2 px-4 py-2 rounded transition'>
+              Edit
+            </Link>
+
+            {/*Delete btn*/}
+            <button
+            onClick={handleDelete}
+            disabled={isPending}
+            className='text-sm bg-red-600 text-white mt-4 px-4 py-2
+            rounded transition hover:bg-red-700 disabled:opacity:50'>
+              {isPending ? 'Deleting...' : 'Delete'}
+            </button>
+      </>
+    )}
+    
   </div>
 }

@@ -1,7 +1,23 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Lightbulb } from "lucide-react";
+import { useAuth } from "#/context/AuthContext";
+import { logoutUser } from "#/api/auth";
 
 const Header = () => {
+    const navigate = useNavigate();
+    const {user, setUser, setAccessToken} = useAuth();
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+            setAccessToken(null);
+            setUser(null);
+            navigate({to: '/'})
+        } catch (err: any) {
+            console.log('Logout failed: ', err)
+        }
+    }
+
     return(
         <header className="bg-white shadow">
             <div className="container mx-auto px-6 py-4 flex
@@ -22,15 +38,57 @@ const Header = () => {
                         Ideas
                     </Link>
 
+                    {user && (
+                        <Link
+                            to='/ideas/new' // Depois colocar a nova rota aqui
+                            className="bg-blue-600 hover:bg-blue-700 text-white
+                            font-medium transition px-4 py-2 rounded-md leading-none"
+                            >
+                            + New Idea
+                        </Link>
+                    )}
 
-                    <Link
-                    to='/ideas/new' // Depois colocar a nova rota aqui
-                    className="bg-blue-600 hover:bg-blue-700 text-white
-                    font-medium transition px-4 py-2 rounded-md leading-none"
-                    >
-                        + New Idea
-                    </Link>
+                    
                 </nav>
+                {/*Auth btns*/}
+
+                <div className="flex items-center space-x-2">
+
+                    {
+                        !user ? (
+                            <>
+                                <Link 
+                                to='/login'
+                                className="text-gray-600 hover:text-gray-700
+                                font-medium transition px-3 py-2 leading-none">
+                                    Login
+                                </Link>
+
+                                <Link 
+                                to='/register'
+                                className="bg-gray-100 hover:bg-gray-200
+                                text-gray-800 font-medium transition px-4 rounded-md py-2 leading-none">
+                                    Register
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <span className="hidden sm:block text-gray-700 font-medium px-2">
+                                    Welcome, {user.name}
+                                </span>
+                                <button onClick={handleLogout} className="text-red-600 font-medium
+                                transition px-3 py-2 leading-none hover:text-red-900">
+                                    Logout
+                                </button>
+                            </>
+                        )
+                    }
+
+                   
+
+
+                </div>
+
             </div>
         </header>
     )
