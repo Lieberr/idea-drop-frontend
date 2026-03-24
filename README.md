@@ -4,7 +4,7 @@ IdeaDrop Frontend is the web interface of a complete application for creating an
 
 The application allows users to view, create, edit, and delete ideas, offering a fluid and responsive experience. Although this repository focuses only on the frontend, the complete project includes a backend and database for data persistence.
 
-![Idea Drop Preview](./public/Idea_Drop_img.png)
+![Idea Drop Preview](idea-drop-ui/public/Idea_drop_img.png)
 
 ## 🛠️ Technologies Used
 
